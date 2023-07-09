@@ -1,9 +1,7 @@
-.photo-card {
-  margin: auto;
-}
 .gallery {
   display: flex;
   flex-wrap: wrap;
+  gap: 40px;
 }
 .search-form {
   margin: 50px;
@@ -15,6 +13,18 @@
   display: flex;
   justify-content: center;
 }
-.photo-card img {
+.gallery__link img {
+  margin: auto;
   border-radius: 20px;
+}
+.gallery__link {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+
+  /* height: 100%; */
+}
+img {
+  display: block;
+  max-width: 100%;
 }

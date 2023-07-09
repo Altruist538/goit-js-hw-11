@@ -1,4 +1,8 @@
 import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 const searchFormEl = document.querySelector('.search-form');
 const SubmitEl = document.querySelector('.search-form input');
 const buttonLoadMoreEl = document.querySelector('.load-more');
@@ -36,7 +40,7 @@ function requestValue(event) {
 function renderImgCard(response) {
   let listArr = [];
   for (let i = 0; i < perPage; i += 1) {
-    listArr.push(`<div class="photo-card">
+    listArr.push(`<a href='${response.data.hits[i].largeImageURL}' class='gallery__link'> 
   <img src="${response.data.hits[i].webformatURL}" alt="${response.data.hits[i].tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -52,7 +56,12 @@ function renderImgCard(response) {
       <b>Downloads: ${response.data.hits[i].downloads}</b>
     </p>
   </div>
-  </div>`);
+  </a>`);
   }
-  return galleryEl.insertAdjacentHTML('beforeend', listArr.join(''));
+  galleryEl.insertAdjacentHTML('beforeend', listArr.join(''));
+  var lightbox = new SimpleLightbox('.gallery a', {
+    captionDelay: 100,
+    captionsData: 'alt',
+  });
+  return;
 }
