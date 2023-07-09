@@ -1,0 +1,20 @@
+.photo-card {
+  margin: auto;
+}
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+}
+.search-form {
+  margin: 50px;
+  display: flex;
+  justify-content: center;
+}
+.load-more {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+.photo-card img {
+  border-radius: 20px;
+}
