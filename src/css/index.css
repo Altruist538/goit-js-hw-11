@@ -8,6 +8,17 @@
   display: flex;
   justify-content: center;
 }
+.search-form input {
+  border-color: chocolate;
+  height: 30px;
+  border-radius: 15px;
+  border-color: chocolate;
+}
+.search-form button {
+  border-color: chocolate;
+  height: 30px;
+  border-radius: 15px;
+}
 .load-more {
   margin: auto;
   display: flex;
