@@ -1,41 +1,119 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+ul {
+  margin: 0;
+}
+.is-hidden {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+
+.section {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  margin: 0 auto;
+}
+/* ---- header ----  */
+.items {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
 .gallery {
+  margin: auto;
+  padding: 30px;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
 }
 .search-form {
-  margin: 50px;
+  height: 40px;
+  background-color: #00c0ff;
+  margin: 40px;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .search-form input {
-  border-color: chocolate;
   height: 30px;
-  border-radius: 15px;
-  border-color: chocolate;
+  width: 300px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px;
 }
 .search-form button {
-  border-color: chocolate;
+  margin-left: 20px;
+  background-color: gold;
   height: 30px;
-  border-radius: 15px;
+  border-radius: 5px;
+
+  box-shadow: 2px 2px 2px;
 }
 .load-more {
-  margin: auto;
+  margin: 20px auto;
+
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 30px;
+  background-color: gold;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px;
 }
 .gallery__link img {
-  margin: auto;
+  object-fit: cover;
+  width: 400px;
+  height: 340px;
   border-radius: 20px;
 }
 .gallery__link {
-  margin: auto;
+  width: 400px;
+  height: 400px;
+  flex-wrap: wrap;
+  gap: 10px;
+  display: flex;
+  text-decoration: none;
+  border-radius: 20px;
+
+  box-shadow: 2px 2px 2px #00c0ff;
+}
+.info {
   display: flex;
   justify-content: center;
-
-  /* height: 100%; */
+  margin-left: auto;
+  margin-right: auto;
 }
-img {
-  display: block;
-  max-width: 100%;
+.info-item {
+  display: flex;
+  justify-content: center;
+  padding-left: 20px;
 }

@@ -1,35 +1,69 @@
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import Notiflix from 'notiflix';
 
 const searchFormEl = document.querySelector('.search-form');
-const SubmitEl = document.querySelector('.search-form input');
+const submitEl = document.querySelector('.search-form input');
+const startButton = document.querySelector('.search-form button');
 const buttonLoadMoreEl = document.querySelector('.load-more');
 let galleryEl = document.querySelector('.gallery');
 const myApiKey = '38129087-a1875a38c8c49036313c55811';
 const BASE_URL = 'https://pixabay.com/api/';
 let pageCounter = 1;
 const perPage = 40;
+startButton.disabled = true;
+buttonLoadMoreEl.style.visibility = 'hidden';
 
 function clearGallery() {
   galleryEl.innerHTML = '';
 }
-async function fetchImg(value) {
-  let response = await axios(`${BASE_URL}`, {
-    params: {
-      key: myApiKey,
-      q: value,
-      image_type: 'photo',
-      orientation: 'horizontal',
-      safesearch: true,
-      page: pageCounter,
-      per_page: perPage,
-    },
-  });
 
-  console.log(response.data.hits);
-  return renderImgCard(response.data.hits);
+async function fetchImg(value) {
+  try {
+    let response = await axios(`${BASE_URL}`, {
+      params: {
+        key: myApiKey,
+        q: value,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        page: pageCounter,
+        per_page: perPage,
+      },
+    });
+
+    const totalHits = response.data.totalHits;
+    const pagesCount = Math.ceil(totalHits / perPage);
+    if (response.data.hits.length === 0) {
+      return Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    } else if (pagesCount === pageCounter) {
+      Notiflix.Notify.failure(
+        `We're sorry, but you've reached the end of search results.`
+      );
+      buttonLoadMoreEl.style.visibility = 'hidden';
+      return renderImgCard(response.data.hits);
+    } else {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      buttonLoadMoreEl.style.visibility = 'visible';
+      return renderImgCard(response.data.hits);
+    }
+  } catch (error) {
+    Notiflix.Notify.failure(`Failed to fetch breeds: ${error}`);
+  }
 }
+
+submitEl.addEventListener('input', event => {
+  const inputValue = event.currentTarget.value.trim();
+  if (inputValue.length === 0) {
+    startButton.disabled = true;
+  } else if (inputValue.length > 0) {
+    startButton.disabled = false;
+  }
+  return;
+});
 
 searchFormEl.addEventListener('submit', requestValue);
 
@@ -37,14 +71,13 @@ function requestValue(event) {
   event.preventDefault();
   pageCounter = 1;
   clearGallery();
-  let requestId = SubmitEl.value.trim();
-  console.log(requestId);
-  // SubmitEl.value = '';
+  let requestId = submitEl.value.trim();
+
   return fetchImg(requestId);
 }
 buttonLoadMoreEl.addEventListener('click', () => {
   pageCounter += 1;
-  fetchImg(SubmitEl.value);
+  fetchImg(submitEl.value);
 });
 
 function renderImgCard(response) {
