@@ -36,6 +36,7 @@ async function fetchImg(value) {
     const totalHits = response.data.totalHits;
     const pagesCount = Math.ceil(totalHits / perPage);
     if (response.data.hits.length === 0) {
+      buttonLoadMoreEl.style.visibility = 'hidden';
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
@@ -45,8 +46,11 @@ async function fetchImg(value) {
       );
       buttonLoadMoreEl.style.visibility = 'hidden';
       return renderImgCard(response.data.hits);
-    } else {
+    } else if (pageCounter === 1) {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      buttonLoadMoreEl.style.visibility = 'visible';
+      return renderImgCard(response.data.hits);
+    } else {
       buttonLoadMoreEl.style.visibility = 'visible';
       return renderImgCard(response.data.hits);
     }
@@ -66,18 +70,24 @@ submitEl.addEventListener('input', event => {
 });
 
 searchFormEl.addEventListener('submit', requestValue);
-
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 100,
+  captionsData: 'alt',
+});
 function requestValue(event) {
   event.preventDefault();
   pageCounter = 1;
   clearGallery();
   let requestId = submitEl.value.trim();
-
-  return fetchImg(requestId);
+  fetchImg(requestId);
+  lightbox.refresh();
+  return;
 }
 buttonLoadMoreEl.addEventListener('click', () => {
   pageCounter += 1;
   fetchImg(submitEl.value);
+  lightbox.refresh();
+  return;
 });
 
 function renderImgCard(response) {
@@ -102,8 +112,6 @@ function renderImgCard(response) {
   });
 
   galleryEl.insertAdjacentHTML('beforeend', listArr.join(''));
-  var lightbox = new SimpleLightbox('.gallery a', {
-    captionDelay: 100,
-    captionsData: 'alt',
-  });
+  lightbox.refresh();
+  return;
 }
