@@ -40,19 +40,23 @@ async function fetchImg(value) {
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-    } else if (pagesCount === pageCounter) {
+    }
+
+    if (pageCounter === 1) {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      buttonLoadMoreEl.style.visibility = 'visible';
+      renderImgCard(response.data.hits);
+    }
+    if (pageCounter > 1) {
+      buttonLoadMoreEl.style.visibility = 'visible';
+      renderImgCard(response.data.hits);
+    }
+    if (pagesCount === pageCounter) {
+      buttonLoadMoreEl.style.visibility = 'hidden';
       Notiflix.Notify.failure(
         `We're sorry, but you've reached the end of search results.`
       );
-      buttonLoadMoreEl.style.visibility = 'hidden';
-      return renderImgCard(response.data.hits);
-    } else if (pageCounter === 1) {
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-      buttonLoadMoreEl.style.visibility = 'visible';
-      return renderImgCard(response.data.hits);
-    } else {
-      buttonLoadMoreEl.style.visibility = 'visible';
-      return renderImgCard(response.data.hits);
+      return;
     }
   } catch (error) {
     Notiflix.Notify.failure(`Failed to fetch breeds: ${error}`);
