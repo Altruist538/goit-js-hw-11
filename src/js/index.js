@@ -1,20 +1,20 @@
 import axios from 'axios';
-import SimpleLightbox from 'simplelightbox';
+import SimpleLightbox from '/node_modules/simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
 const searchFormEl = document.querySelector('.search-form');
 const submitEl = document.querySelector('.search-form input');
 const startButton = document.querySelector('.search-form button');
-const buttonLoadMoreEl = document.querySelector('.load-more');
+// const buttonLoadMoreEl = document.querySelector('.load-more');
 let galleryEl = document.querySelector('.gallery');
 const myApiKey = '38129087-a1875a38c8c49036313c55811';
 const BASE_URL = 'https://pixabay.com/api/';
 let pageCounter = 1;
 const perPage = 40;
 startButton.disabled = true;
-buttonLoadMoreEl.style.visibility = 'hidden';
-
+// buttonLoadMoreEl.style.visibility = 'hidden';
+let isLoading = false;
 function clearGallery() {
   galleryEl.innerHTML = '';
 }
@@ -36,7 +36,7 @@ async function fetchImg(value) {
     const totalHits = response.data.totalHits;
     const pagesCount = Math.ceil(totalHits / perPage);
     if (response.data.hits.length === 0) {
-      buttonLoadMoreEl.style.visibility = 'hidden';
+      // buttonLoadMoreEl.style.visibility = 'hidden';
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
@@ -44,15 +44,15 @@ async function fetchImg(value) {
 
     if (pageCounter === 1) {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-      buttonLoadMoreEl.style.visibility = 'visible';
+      // buttonLoadMoreEl.style.visibility = 'visible';
       renderImgCard(response.data.hits);
     }
     if (pageCounter > 1) {
-      buttonLoadMoreEl.style.visibility = 'visible';
+      // buttonLoadMoreEl.style.visibility = 'visible';
       renderImgCard(response.data.hits);
     }
     if (pagesCount === pageCounter) {
-      buttonLoadMoreEl.style.visibility = 'hidden';
+      // buttonLoadMoreEl.style.visibility = 'hidden';
       Notiflix.Notify.failure(
         `We're sorry, but you've reached the end of search results.`
       );
@@ -84,19 +84,27 @@ function requestValue(event) {
   clearGallery();
   let requestId = submitEl.value.trim();
   fetchImg(requestId);
-  lightbox.refresh();
   return;
 }
-buttonLoadMoreEl.addEventListener('click', () => {
-  pageCounter += 1;
-  fetchImg(submitEl.value);
-  lightbox.refresh();
-  return;
+// buttonLoadMoreEl.addEventListener('click', () => {
+//   pageCounter += 1;
+//   fetchImg(submitEl.value);
+//   lightbox.refresh();
+//   return;
+// });
+window.addEventListener('scroll', () => {
+  if (isLoading) return;
+  const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+  if (scrollTop + clientHeight >= scrollHeight) {
+    pageCounter += 1;
+    fetchImg(submitEl.value);
+    return;
+  }
 });
 
 function renderImgCard(response) {
   let listArr = response.map(resp => {
-    return `<a href='${resp.largeImageURL}' class='gallery__link'> 
+    return `<a href='${resp.largeImageURL}' class='gallery__link'>
       <img src="${resp.webformatURL}" alt="${resp.tags}" loading="lazy" />
       <div class="info">
         <p class="info-item">
